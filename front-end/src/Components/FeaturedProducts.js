@@ -1,5 +1,6 @@
 import React from "react";
 import ImageCard from "../Components/ImageCard";
+import { Link } from "react-router-dom";
 
 export default function FeaturedProducts() {
   const featuredProducts = () => {
@@ -8,7 +9,12 @@ export default function FeaturedProducts() {
       featureProdsID.push(i);
     }
     return featureProdsID.map((prod) => {
-      return <ImageCard key={prod} prod={prod} />;
+      return (
+        <Link className="linkCompo" to={`/shop/${prod}`}>
+          {" "}
+          <ImageCard key={prod} prod={prod} />{" "}
+        </Link>
+      );
     });
   };
   // next btn function

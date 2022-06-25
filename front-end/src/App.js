@@ -5,12 +5,15 @@ import { fab } from "@fortawesome/free-brands-svg-icons";
 import { faCartShopping, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
-import Help from "./Pages/Help";
 import Layout from "./Pages/Layout";
 import NoPage from "./Pages/NoPage";
 import Shop from "./Pages/Shop";
 import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
+import ProductPage from "./Pages/ProductPage";
+import Cart from "./Pages/Cart";
+import BuyNow from "./Pages/BuyNow";
+import ConfirmationPage from "./Pages/confirmationPage";
 library.add(fab, faCartShopping, faSearch);
 
 function App() {
@@ -19,9 +22,20 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />}></Route>
+          <Route path="/shop">
+            <Route index element={<Shop />} />
+            <Route path=":id">
+              <Route index element={<ProductPage />}></Route>
+              <Route path="buyNow">
+                <Route index element={<BuyNow />}></Route>
+                <Route
+                  path="confirmationPage"
+                  element={<ConfirmationPage />}></Route>
+              </Route>
+            </Route>
+          </Route>
           <Route path="about" element={<About />} />
-          <Route path="help" element={<Help />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="*" element={<NoPage />} />

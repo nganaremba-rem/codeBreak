@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function AboutComponent() {
+export default function AboutComponent(props) {
   return (
-    <section className="fifth">
+    <section className="fifth" style={props.sty}>
       <h1 className="about">About Your Shop</h1>
       <div className="aboutDescription">
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui excepturi

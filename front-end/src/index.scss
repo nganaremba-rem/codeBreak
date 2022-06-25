@@ -37,18 +37,25 @@ button:hover {
 .brandName {
     font-size: 1.7rem;
     padding: .3rem 1rem;
-    color: white;
     font-weight: bolder;
 }
 
 .backgroundImage {
-    background-image: url("https://picsum.photos/495");
+    background-image: url("https://source.unsplash.com/IHL-Jbawvvo");
     width: 100%;
     height: 100%;
     background-repeat: no-repeat;
     background-size: cover;
     min-height: 90vh;
     max-height: 90vh;
+}
+
+.linkCompo{
+    text-decoration: none;
+    color: black;
+}
+.linkCompo:hover{
+    color: black;
 }
 
 .backdrop {
@@ -65,22 +72,40 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 1rem;
-    background: rgb(28, 28, 28) !important;
+    background: transparent;
+    // color: #584a8e;
+    // mix-blend-mode: difference;
+    box-shadow: 0 4px 10px 0 rgba($color: #000000, $alpha: 0.2);
 }
 
 .brandWrapper {
     display: flex;
     align-items: center;
 }
+.brandLogo{
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px 0px rgba($color: #000000, $alpha: 0.2);
+}
+.brandLogo img{
+    width: 100%;
+    object-fit: cover;
+}
 
 .searchWrapper {
     display: flex;
     align-items: center;
-    border: 1px solid #333;
+    border: 1px solid rgb(191, 191, 191);
     margin-inline: 1rem;
     border-radius: 2rem;
     padding:0.5rem;
-    background: rgb(209, 209, 209);
+    background: #F0F0F0;
+    color:rgb(109, 109, 109);
+}
+.searchIcon{
+    margin-left: .4rem;
 }
 
 .searchWrapper input {
@@ -109,7 +134,8 @@ li {
 }
 
 .navItem:hover {
-    background: rgba(0, 0, 0, 0.2);
+    mix-blend-mode: normal; 
+    background: red;
 }
 
 .cart {

@@ -11,20 +11,30 @@ export default function Navbar() {
     alignItems: "center",
     gap: ".4rem",
     color: "white",
+    mixBlendMode: "difference",
+  };
+  const btn = {
+    textDecoration: "none",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: ".4rem",
   };
   return (
     <nav>
       <div className="brandWrapper">
-        <div className="brandLogo">
-          <img
-            src="https://picsum.photos/50"
-            alt="logo"
-            style={{ borderRadius: "50%" }}
-          />
-        </div>
-        <Link to={"/"} style={LinkStyle}>
+        <Link
+          to={"/"}
+          style={
+            (btn,
+            { display: "flex", alignItems: "center", textDecoration: "none" })
+          }>
+          <div className="brandLogo">
+            <img src="https://picsum.photos/250" alt="logo" />
+          </div>
           <div className="brandName">
-            <span style={{ color: "red" }}>code</span>Break
+            <span style={{ color: "red" }}>code</span>
+            <span style={{ color: "blueviolet" }}>Break</span>
           </div>
         </Link>
         <div className="searchWrapper">
@@ -39,23 +49,23 @@ export default function Navbar() {
       </div>
       <div className="navList">
         <Link to={"/"} style={LinkStyle} className="navItem">
-          <i class="fa-solid fa-house-user" style={{ color: "white" }}></i>
+          <i class="fa-solid fa-house-user"></i>
           <div>Home</div>
         </Link>
         <Link to={"/shop"} style={LinkStyle} className="navItem">
-          <i class="fa-solid fa-store" style={{ color: "white" }}></i>
+          <i class="fa-solid fa-store"></i>
           <div>Shop</div>
         </Link>
         <Link to="/about" style={LinkStyle} className="navItem">
-          <i class="fa-solid fa-address-card" style={{ color: "white" }}></i>
+          <i class="fa-solid fa-address-card"></i>
           <div>About</div>
         </Link>
-        <Link to={"/help"} style={LinkStyle} className="navItem">
-          <i class="fa-solid fa-circle-question" style={{ color: "white" }}></i>
-          <div>Help</div>
+        <Link to="/cart" style={LinkStyle} className="navItem">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <div>Cart</div>
         </Link>
 
-        <Link to={"/login"} style={LinkStyle}>
+        <Link to={"/login"} style={btn}>
           <div className="cart">
             <div className="cartIcon">
               <i className="fa-solid fa-right-to-bracket"></i>

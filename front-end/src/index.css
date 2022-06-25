@@ -37,18 +37,26 @@ button:hover {
 .brandName {
   font-size: 1.7rem;
   padding: .3rem 1rem;
-  color: white;
   font-weight: bolder;
 }
 
 .backgroundImage {
-  background-image: url("https://picsum.photos/495");
+  background-image: url("https://source.unsplash.com/IHL-Jbawvvo");
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 90vh;
   max-height: 90vh;
+}
+
+.linkCompo {
+  text-decoration: none;
+  color: black;
+}
+
+.linkCompo:hover {
+  color: black;
 }
 
 .backdrop {
@@ -78,7 +86,9 @@ nav {
       -ms-flex-pack: justify;
           justify-content: space-between;
   padding: 0.5rem 1rem;
-  background: #1c1c1c !important;
+  background: transparent;
+  -webkit-box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 .brandWrapper {
@@ -90,6 +100,21 @@ nav {
           align-items: center;
 }
 
+.brandLogo {
+  height: 50px;
+  width: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.brandLogo img {
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .searchWrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -97,11 +122,16 @@ nav {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border: 1px solid #333;
+  border: 1px solid #bfbfbf;
   margin-inline: 1rem;
   border-radius: 2rem;
   padding: 0.5rem;
-  background: #d1d1d1;
+  background: #F0F0F0;
+  color: #6d6d6d;
+}
+
+.searchIcon {
+  margin-left: .4rem;
 }
 
 .searchWrapper input {
@@ -134,7 +164,8 @@ li {
 }
 
 .navItem:hover {
-  background: rgba(0, 0, 0, 0.2);
+  mix-blend-mode: normal;
+  background: red;
 }
 
 .cart {

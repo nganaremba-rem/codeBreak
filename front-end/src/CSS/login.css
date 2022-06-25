@@ -25,6 +25,19 @@
     padding: 2rem;
     min-height: 80vh;
 }
+.content.form{
+    grid-column: 2 / 3;
+}
+.content.img.login{
+    grid-column: 1 / 2;
+    grid-row: 1/-1;
+}
+.content.img.login{
+    margin-left: 2rem;
+}
+.content.img.signup{
+    margin-left: -2rem;
+}
 .line{
     height: .12rem;
     width: 5rem;
@@ -112,11 +125,11 @@
     color: var(--text-color);
 }
 .content.img{
-    overflow: hidden;
-    max-height: 100vh;
+    max-height: calc(100vh - 811px);
     max-width: 100%;
+    overflow: hidden;
 }
 .content.img img{
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }

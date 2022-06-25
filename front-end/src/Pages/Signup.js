@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/login.css";
-import bgImage from "../images/bg.jpg";
+import bgImage from "../images/form2.svg";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup() {
@@ -111,7 +111,7 @@ export default function Signup() {
             Already have an account? <Link to={"/login"}> Login</Link>
           </div>
         </div>
-        <div className="content img">
+        <div className="content img signup">
           <img src={bgImage} alt="ok" />
         </div>
       </div>

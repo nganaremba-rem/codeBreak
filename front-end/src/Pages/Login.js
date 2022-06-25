@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/login.css";
-import bgImage from "../images/bg.jpg";
+import svg from "../images/form.svg";
 import { Link } from "react-router-dom";
 // import ShowModal from "../Components/ShowModal";
 
@@ -51,7 +51,7 @@ export default function Login() {
     <>
       <Navbar />
       <div className="main-container">
-        <div className="content">
+        <div className="content form">
           <div className="outlet">
             <h1 className="heading">Login</h1>
             <div className="signup-with">
@@ -90,8 +90,8 @@ export default function Login() {
             New User? <Link to={"/signup"}> Sign Up</Link>
           </div>
         </div>
-        <div className="content img">
-          <img src={bgImage} alt="ok" />
+        <div className="content img login">
+          <img src={svg} alt="ok" />
         </div>
       </div>
     </>
