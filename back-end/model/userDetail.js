@@ -10,7 +10,7 @@ const userDetails = new mongoose.Schema({
     required: true,
   },
   Address: {
-    type: String,
+    type: Array,
     required: true,
   },
   PhoneNo: {
@@ -20,6 +20,12 @@ const userDetails = new mongoose.Schema({
   Password: {
     type: String,
     required: true,
+  },
+  Cart: {
+    type: Array,
+  },
+  Orders: {
+    type: Array,
   },
 });
 

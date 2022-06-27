@@ -1,21 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/shop.css";
-import ProductCard from "../Components/shop/productCard";
+import productCard from "../Components/shop/productCard";
 import Footer from "../Components/Footer";
 
 export default function Shop() {
-  window.scrollTo(0, 0);
-  const renderCards = () => {
-    const ids = [];
-    for (let i = 0; i < 10; i++) {
-      ids.push(i);
+  const [myData, setMyData] = useState();
+  async function getData() {
+    try {
+      const data = await productCard();
+      return setMyData(data.map((item) => item));
+    } catch (e) {
+      console.log(e);
     }
-
-    return ids.map((id) => {
-      return <ProductCard key={id} />;
-    });
-  };
+  }
+  getData();
   return (
     <>
       <Navbar />
@@ -36,8 +35,8 @@ export default function Shop() {
           <div className="operations">
             <div className="sort">
               <select
-                class="form-select mb-3"
-                aria-label=".form-select-lg example">
+                className="form-select mb-3"
+                aria-label="form-select-lg example">
                 <option selected>Sort By</option>
                 <option value="popularity">Popularity</option>
                 <option value="priceH2L">Price: High to Low</option>
@@ -45,7 +44,7 @@ export default function Shop() {
               </select>
             </div>
           </div>
-          <main className="products">{renderCards()}</main>
+          <main className="products">{myData}</main>
         </section>
       </div>
       <Footer />

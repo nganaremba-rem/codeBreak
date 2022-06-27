@@ -1,91 +1,91 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/Cart.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import CartItem from "../Components/CartItem";
 
-export default function BuyNow() {
+export default function Cart() {
+  const Navigate = useNavigate();
+
+  // If not login
+  if (localStorage.getItem("User") == null) {
+    Navigate("/login");
+  }
+  //get email
+  const email = localStorage.getItem("User");
+  const [myUser, setMyUser] = useState([]);
+  const [myData, setMyData] = useState({});
+  //get carts and userdata
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await fetch("http://localhost:3001/getUserData/carts", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        });
+        const arrData = await data.json();
+        setMyUser(arrData);
+        // user data
+        const userData = await fetch("http://localhost:3001/getUserData/", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        });
+        const user = await userData.json();
+        setMyData(user);
+        console.log(user);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
   return (
     <>
       <Navbar></Navbar>
-      <div className="main-wrapper mt-3">
-        <div className="carts  shadow rounded-3 p-4">
-          <table className="table table-hover">
-            <thead>
-              <th>PRODUCT</th>
-              <th>PRICE</th>
-              <th>QUANTITY</th>
-              <th>TOTAL</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <img
-                    src="https://api.lorem.space/image/shoes?w=100&h=100"
-                    alt=""
-                  />
-                  <div className="product-name">Shoes</div>
-                </td>
-                <td>Rs. 9000</td>
-                <td>
-                  <input
-                    className="form-control"
-                    type="number"
-                    name="quantity"
-                    id="quantity"
-                    style={{ maxWidth: "6rem" }}
-                  />
-                </td>
-                <td>Rs. 9000</td>
-                <td>
-                  <button className="btn btn-danger">Delete</button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <img
-                    src="https://api.lorem.space/image/shoes?w=100&h=100"
-                    alt=""
-                  />
-                  <div className="product-name">Shoes</div>
-                </td>
-                <td>Rs. 9000</td>
-                <td>
-                  <input
-                    className="form-control"
-                    type="number"
-                    name="quantity"
-                    id="quantity"
-                    style={{ maxWidth: "6rem" }}
-                  />
-                </td>
-                <td>Rs. 9000</td>
-                <td>
-                  <button className="btn btn-danger">Delete</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className=" d-flex flex-column justify-content-between carts-totals shadow shadow rounded-3 p-4 position-relative">
-          <div className="detail">
-            <h4>CART TOTALS</h4>
-            <div className="row">
-              <div className="col  fw-bold">Subtotal: </div>
-              <div className="col">Rs 8000</div>
-            </div>
-            <div className="row">
-              <div className="col fw-bold">Shipping Address: </div>
-              <div className="col">Kwakeithel Akham Leikai</div>
-            </div>
-            <div className="row">
-              <div className="col fw-bold">Total: </div>
-              <div className="col">Rs. 8000</div>
-            </div>
-          </div>
+      <div
+        className="carts  shadow rounded-3 p-4 position-relative bg-white mt-4"
+        style={{ maxHeight: "30rem", overflow: "auto" }}>
+        <div className="head d-flex bg-white align-items-center justify-content-between">
+          <h2>Total Products: {Object.keys(myUser).length}</h2>
           <Link to={"/shop/1/buyNow"}>
             <button className="btn btn-primary">Proceed to checkout</button>
           </Link>
         </div>
+        <table className="table table-hover position-relative">
+          <thead className=" top-0">
+            <tr className="text-white bg-secondary">
+              <th>PRODUCT</th>
+              <th>PRICE</th>
+              <th>QUANTITY</th>
+              <th>TOTAL</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {myUser.map((data, index) => {
+              return (
+                <CartItem
+                  id={data.id}
+                  price={data.price}
+                  index={index}
+                  imageLink={data.imageLink}
+                  key={data.id}
+                />
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </>
   );

@@ -2,11 +2,19 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/login.css";
 import svg from "../images/form.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import ShowModal from "../Components/ShowModal";
 
 export default function Login() {
   const [msg, setMsg] = useState("");
+  const [user, setUser] = useState("");
+  const Navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("User")) {
+      Navigate("/");
+    }
+  }, []);
 
   const showPass = (e) => {
     const eye = e.target;
@@ -38,12 +46,14 @@ export default function Login() {
     });
 
     const user = await response.json();
-    if (user === null || user.msg == "User not found") {
+    if (user === null || user?.msg == "User not found") {
       setMsg(
         "User Not Found. Please make sure your username and password are correct",
       );
     } else {
-      setMsg("User Found.");
+      localStorage.setItem("User", user.User);
+      setUser("User Logged IN");
+      Navigate("/");
     }
   };
 
@@ -79,7 +89,7 @@ export default function Login() {
                     id="password"
                     autoComplete="off"
                   />
-                  <i onClick={showPass} class="fa-solid fa-eye-slash"></i>
+                  <i onClick={showPass} className="fa-solid fa-eye-slash"></i>
                 </div>
               </div>
               <input type="submit" value="Login" />

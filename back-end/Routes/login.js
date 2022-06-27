@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
   const userArray = await userDetails.find();
   const user = userArray.find((user) => user.Email == email);
   if (await bcrypt.compare(password, user?.Password ?? "")) {
-    res.json(user);
+    res.json({ User: email });
   } else {
     res.status(500).json({ msg: "User not found" });
   }

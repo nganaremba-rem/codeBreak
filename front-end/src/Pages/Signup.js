@@ -2,11 +2,20 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/login.css";
 import bgImage from "../images/form2.svg";
+import Button from "react-bootstrap/Button";
+import MyVerticallyCenteredModal from "../Components/Modal";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
+  const [modalShow, setModalShow] = React.useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("User")) {
+      navigate("/");
+    }
+  }, []);
 
   const showPass = (e) => {
     const eye = e.target;
@@ -36,18 +45,25 @@ export default function Signup() {
       },
       body: JSON.stringify(Object.fromEntries(formData)),
     });
+    const res = await response.json();
+
+    console.log(res);
 
     if (response.status === 201) {
-      setMsg("Sign Up Success. You can now go to Login Page");
-      navigate("/login");
-    } else {
-      setMsg("Please fill up all the required fields");
+      setModalShow(true);
+    } else if (res.msg != "") {
+      setMsg(res.msg);
     }
   };
 
   return (
     <>
       <Navbar />
+
+      <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
       <div className="main-container">
         <div className="content">
           <div className="outlet">
@@ -100,7 +116,7 @@ export default function Signup() {
                     id="password"
                     autoComplete="off"
                   />
-                  <i onClick={showPass} class="fa-solid fa-eye-slash"></i>
+                  <i onClick={showPass} className="fa-solid fa-eye-slash"></i>
                 </div>
               </div>
               <input type="submit" value="Sign up" />
