@@ -1,44 +1,142 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/shop.css";
-import productCard from "../Components/shop/productCard";
+import products from "../Components/shop/Products";
 import Footer from "../Components/Footer";
+import ProductLinkItem from "../Components/shop/ProductLinkItem";
 
 export default function Shop() {
-  const [myData, setMyData] = useState();
-  async function getData() {
+  const [myData, setMyData] = useState([]);
+  const [currentData, setCurrentData] = useState([]);
+  const [mainData, setMainData] = useState([]);
+  // GET PRODUCTS
+
+  const getData = async () => {
     try {
-      const data = await productCard();
-      return setMyData(data.map((item) => item));
+      console.log("Getting Data");
+      const products = await fetch("http://localhost:3001/getProducts");
+      const productsJson = await products.json();
+      setCurrentData(productsJson);
+      setMainData(productsJson);
     } catch (e) {
       console.log(e);
     }
-  }
-  getData();
+  };
+
+  // SORTING
+
+  const sortHandler = (e) => {
+    const value = e.target.value;
+    const sortH2L = () => {
+      const sorted = currentData.sort((a, b) => b.price - a.price);
+      setCurrentData(() => sorted);
+      renderMe();
+
+      console.log(sorted);
+    };
+
+    const sortL2H = () => {
+      const sorted = currentData.sort((a, b) => a.price - b.price);
+      setCurrentData(() => sorted);
+      renderMe();
+
+      console.log(currentData);
+    };
+
+    if (value === "priceH2L") {
+      sortH2L();
+    } else if (value === "priceL2H") {
+      sortL2H();
+    } else if (value === "") {
+      normalSort();
+    }
+  };
+
+  // FILTER
+  const filter = (id) => {
+    const filterNow = (id) => {
+      const filteredItems = mainData.filter((item) => item.category == id);
+      setCurrentData(() => filteredItems);
+      renderMe();
+    };
+    id == "all" ? getData() : filterNow(id);
+  };
+
+  const filterHandle = (e) => {
+    const toggle = () => {
+      const items = document.querySelectorAll(".categories-item");
+      items.forEach((item) => {
+        item.classList.remove("active-category");
+      });
+      e.target.classList.add("active-category");
+    };
+    toggle();
+    console.log(e);
+    document.querySelector("#sort").value = "";
+
+    const id = e.target.id;
+    filter(id);
+  };
+
+  // NORMAL SORT
+  const normalSort = () => {
+    renderMe();
+  };
+  const renderMe = () => {
+    setMyData(() =>
+      currentData.map((item) => <ProductLinkItem item={item} key={item.id} />),
+    );
+  };
+
+  // when component mounts
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Data changed");
+    renderMe();
+  }, [currentData]);
+
   return (
     <>
       <Navbar />
       <div className="shop mb-lg-5">
         <section className="sidebar">
           <h3>Categories</h3>
-          <ul>
-            <li className="categories-item active-category">All</li>
-            <li className="categories-item">Clothings</li>
-            <li className="categories-item">Computers</li>
-            <li className="categories-item">Mobile Phones</li>
-            <li className="categories-item">Accessories</li>
-            <li className="categories-item">Groceries</li>
-            <li className="categories-item">Medicines</li>
+          <ul onClick={(e) => filterHandle(e)}>
+            <li className="categories-item active-category" id="all">
+              All
+            </li>
+            <li className="categories-item" id="Shoes">
+              Shoes
+            </li>
+            <li className="categories-item" id="Books">
+              Books
+            </li>
+            <li className="categories-item" id="Beauty">
+              Beauty
+            </li>
+            <li className="categories-item" id="Baby">
+              Baby
+            </li>
+            <li className="categories-item" id="Clothing&Accessories">
+              Clothing & Accessories
+            </li>
           </ul>
         </section>
         <section className="main-section">
           <div className="operations">
             <div className="sort">
               <select
+                onChange={sortHandler}
                 className="form-select mb-3"
-                aria-label="form-select-lg example">
-                <option selected>Sort By</option>
-                <option value="popularity">Popularity</option>
+                aria-label="form-select-lg example"
+                defaultValue={""}
+                id="sort">
+                <option value="" disabled>
+                  Sort By
+                </option>
                 <option value="priceH2L">Price: High to Low</option>
                 <option value="priceL2H">Price: Low to High</option>
               </select>

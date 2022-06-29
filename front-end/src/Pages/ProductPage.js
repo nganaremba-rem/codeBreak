@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import AddToCartFront from "../Components/AddToCartFront";
@@ -9,17 +9,19 @@ export default function ProductPage() {
 
   const [myProduct, setMyProduct] = useState({});
   const id = useParams();
-  async function fetchProduct() {
-    try {
-      const data = await fetch("http://localhost:3001/getProducts/" + id.id);
-      const obj = await data.json();
-      console.log(obj);
-      return setMyProduct(obj);
-    } catch (e) {
-      console.log(e);
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const data = await fetch("http://localhost:3001/getProducts/" + id.id);
+        const obj = await data.json();
+        console.log(obj);
+        return setMyProduct(obj);
+      } catch (e) {
+        console.log(e);
+      }
     }
-  }
-  fetchProduct();
+    fetchProduct();
+  }, []);
 
   return (
     <>

@@ -35,9 +35,9 @@ export default function BuyNow() {
             </thead>
             <tbody>
               <tr>
-                <td>Shoes</td>
-                <td>2893748932</td>
-                <td>Rs. 8000</td>
+                <td>Nike Unisex-Adult Sb Blzr Court Skateboarding Shoe</td>
+                <td>95825834852973100</td>
+                <td>Rs. 3699.00</td>
               </tr>
             </tbody>
           </table>
@@ -48,8 +48,8 @@ export default function BuyNow() {
               Delivery Address
             </h4>
             <div className="delivery-body-wrapper m-lg-5">
-              <div className="name fw-bold">Jenitkumar</div>
-              <div className="phone-no">1234567890</div>
+              <div className="name fw-bold">Nganaremba</div>
+              <div className="phone-no">8837457686</div>
               <div className="address text-muted">
                 <div className="street">Kwakeithel</div>
                 <div className="pin-code">795001</div>

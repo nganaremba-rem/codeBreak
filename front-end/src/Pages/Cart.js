@@ -73,17 +73,25 @@ export default function Cart() {
             </tr>
           </thead>
           <tbody>
-            {myUser.map((data, index) => {
-              return (
-                <CartItem
-                  id={data.id}
-                  price={data.price}
-                  index={index}
-                  imageLink={data.imageLink}
-                  key={data.id}
-                />
-              );
-            })}
+            {Object.keys(myUser).length == 0 ? (
+              <td colSpan={5}>
+                <h1 className="text-center p-5 text-danger">
+                  Your cart is empty!
+                </h1>
+              </td>
+            ) : (
+              myUser.map((data, index) => {
+                return (
+                  <CartItem
+                    id={data.id}
+                    price={data.price}
+                    index={index}
+                    imageLink={data.imageLink}
+                    key={data.id}
+                  />
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
