@@ -9,6 +9,7 @@ export default function Login() {
   const [msg, setMsg] = useState("");
   const [user, setUser] = useState("");
   const Navigate = useNavigate();
+  const [spinner, setSpinner] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("User")) {
@@ -37,6 +38,7 @@ export default function Login() {
   };
   // Fetch
   const loginMe = async (formData) => {
+    setSpinner(true);
     const response = await fetch("http://localhost:3001/login", {
       method: "POST",
       headers: {
@@ -50,8 +52,10 @@ export default function Login() {
       setMsg(
         "User Not Found. Please make sure your username and password are correct",
       );
+      setSpinner(false);
     } else {
       localStorage.setItem("User", user.User);
+      setSpinner(false);
       setUser("User Logged IN");
       Navigate("/");
     }
@@ -93,6 +97,11 @@ export default function Login() {
                 </div>
               </div>
               <input type="submit" value="Login" />
+              {spinner && (
+                <span
+                  className="spinner-border text-success"
+                  role={"status"}></span>
+              )}
             </form>
           </div>
 

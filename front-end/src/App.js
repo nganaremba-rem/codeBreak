@@ -27,7 +27,7 @@ function App() {
             <Route index element={<Shop />} />
             <Route path=":id">
               <Route index element={<ProductPage />}></Route>
-              <Route path="buyNow">
+              <Route path=":quantity/buyNow">
                 <Route index element={<BuyNow />}></Route>
                 <Route
                   path="confirmationPage"

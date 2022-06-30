@@ -3,12 +3,13 @@ const userDetail = require("../model/userDetail");
 const fs = require("fs");
 
 router.post("/", async (req, res) => {
-  const { id, email } = req.body;
+  const { id, email, quantity = 1 } = req.body;
   const allUser = await userDetail.find();
   const user = allUser.find((user) => email === user.Email);
   const file = fs.readFileSync("public/products.json", "utf-8");
   const arrFile = JSON.parse(file);
   const product = arrFile.find((prod) => id === prod.id);
+  product.quantity = quantity;
 
   // console.log(user.Name, product);
 
@@ -21,6 +22,20 @@ router.post("/", async (req, res) => {
     );
     console.log(update);
     res.json({ msg: "Added" });
+  } else {
+    const update = await userDetail.findOneAndUpdate(
+      {
+        Email: email,
+        "Cart.id": id,
+      },
+      {
+        $set: {
+          "Cart.$.quantity": quantity,
+        },
+      },
+    );
+    console.log(update);
+    res.json({ msg: "Updated quantity" });
   }
 });
 

@@ -14,6 +14,7 @@ export default function productItem({ item }) {
       body: JSON.stringify({
         id: item.id,
         email: myMail,
+        quantity: 1,
       }),
     });
     if (data.ok) {

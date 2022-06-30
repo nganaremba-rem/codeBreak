@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/shop.css";
-import products from "../Components/shop/Products";
 import Footer from "../Components/Footer";
 import ProductLinkItem from "../Components/shop/ProductLinkItem";
 
@@ -9,15 +8,18 @@ export default function Shop() {
   const [myData, setMyData] = useState([]);
   const [currentData, setCurrentData] = useState([]);
   const [mainData, setMainData] = useState([]);
+  const [spinner, setSpinner] = useState(false);
   // GET PRODUCTS
 
   const getData = async () => {
+    setSpinner(true);
     try {
       console.log("Getting Data");
       const products = await fetch("http://localhost:3001/getProducts");
       const productsJson = await products.json();
       setCurrentData(productsJson);
       setMainData(productsJson);
+      setSpinner(false);
     } catch (e) {
       console.log(e);
     }
@@ -83,6 +85,7 @@ export default function Shop() {
     renderMe();
   };
   const renderMe = () => {
+    window.scrollTo(0, 0);
     setMyData(() =>
       currentData.map((item) => <ProductLinkItem item={item} key={item.id} />),
     );
@@ -142,7 +145,18 @@ export default function Shop() {
               </select>
             </div>
           </div>
-          <main className="products">{myData}</main>
+          <main className="products">
+            {spinner ? (
+              <span
+                className=" spinner-border text-danger"
+                role={"status"}
+                style={{ fontSize: "20rem" }}>
+                <span class="sr-only">Loading...</span>
+              </span>
+            ) : (
+              myData
+            )}
+          </main>
         </section>
       </div>
       <Footer />

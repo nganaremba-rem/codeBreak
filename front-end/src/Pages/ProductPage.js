@@ -5,11 +5,13 @@ import AddToCartFront from "../Components/AddToCartFront";
 import { Link, useParams } from "react-router-dom";
 
 export default function ProductPage() {
-  window.scrollTo(0, 0);
+  const [quantityValue, setQuantityValue] = useState(1);
 
   const [myProduct, setMyProduct] = useState({});
   const id = useParams();
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     async function fetchProduct() {
       try {
         const data = await fetch("http://localhost:3001/getProducts/" + id.id);
@@ -23,6 +25,9 @@ export default function ProductPage() {
     fetchProduct();
   }, []);
 
+  const handleQuantity = (e) => {
+    setQuantityValue(e.target.value);
+  };
   return (
     <>
       <Navbar />
@@ -50,25 +55,33 @@ export default function ProductPage() {
           <h4 className="product-price text-danger">Rs. {myProduct.price}</h4>
           <div className="quantity d-flex align-items-center gap-3">
             <label htmlFor="quantity">Quantity</label>
-            <input
-              type="number"
-              name="quantity"
-              id="quantity"
+            <select
               className="form-control"
               style={{ width: "5rem" }}
-              min={1}
-              max={5}
-              defaultValue={1}
-            />
+              name="quantity"
+              id="quantity"
+              defaultValue={"1"}
+              onChange={handleQuantity}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
           </div>
           <div className="d-flex flex-column gap-2 m-3">
             <button
-              onClick={AddToCartFront(id)}
+              onClick={AddToCartFront(id, quantityValue)}
               className="addToCart form-control btn btn-dark text-white p-3 fw-bold rounded-pill"
               style={{ verticalAlign: "middle" }}>
               Add to Cart
             </button>
-            <Link to={"./buyNow"}>
+            <Link to={`./${quantityValue}/buyNow/`}>
               <button className="buy-now btn form-control btn-danger text-white fw-bold p-3 rounded-pill">
                 Buy Now
               </button>

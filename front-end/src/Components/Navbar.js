@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 // import { NavHashLink } from "react-router-hash-link";
-import Home from "../Pages/Home";
 
 export default function Navbar() {
   const Navigate = useNavigate();
@@ -13,15 +12,17 @@ export default function Navbar() {
   };
 
   async function getUser() {
-    const data = await fetch("http://localhost:3001/user", {
-      method: "post",
-      body: JSON.stringify(mail),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const userData = await data.json();
-    setMyDetail(userData);
+    if (mail.user) {
+      const data = await fetch("http://localhost:3001/user", {
+        method: "post",
+        body: JSON.stringify(mail),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const userData = await data.json();
+      setMyDetail(userData);
+    }
   }
   getUser();
 

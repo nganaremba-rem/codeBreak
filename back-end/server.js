@@ -10,6 +10,10 @@ const getProducts = require("./Routes/getProducts");
 const addToCart = require("./Routes/addToCart");
 const getUserData = require("./Routes/getUserData");
 const deleteCartItem = require("./Routes/deleteCartItem");
+const buyNow = require("./Routes/buyNow");
+const emailValidate = require("./Routes/emailValidate");
+const addAddress = require("./Routes/addAddress");
+const deleteAddress = require("./Routes/deleteAddress");
 require("dotenv").config();
 
 // MIDDLEWARES
@@ -18,12 +22,16 @@ app.use(express.json());
 app.use(express.static("public"));
 // ROUTES
 app.use("/signup", signupPage);
+app.use("/validateEmail", emailValidate);
 app.use("/login", loginPage);
 app.use("/user", User);
 app.use("/getProducts", getProducts);
 app.use("/addToCart", addToCart);
 app.use("/getUserData", getUserData);
 app.use("/deleteCartItem", deleteCartItem);
+app.use("/buyNow", buyNow);
+app.use("/addAddress", addAddress);
+app.use("/deleteAddress", deleteAddress);
 app.get("/deleteall", (req, res) => {
   userDetails.collection.deleteMany({});
   res.send("Deleted");

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-const AddToCartFront = (id) => {
+const AddToCartFront = (id, quantity) => {
   return async () => {
     const myMail = localStorage.getItem("User");
     console.log(id, myMail);
@@ -12,6 +12,7 @@ const AddToCartFront = (id) => {
       body: JSON.stringify({
         id: id.id,
         email: myMail,
+        quantity: quantity,
       }),
     });
     if (data.ok) {

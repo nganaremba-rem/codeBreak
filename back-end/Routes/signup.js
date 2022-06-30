@@ -19,7 +19,14 @@ router.post("/", async (req, res) => {
       const user = await userDetails.create({
         Name: req.body.name,
         Email: req.body.email,
-        Address: [req.body.address],
+        Address: [
+          {
+            address: req.body.address,
+            city: req.body.city,
+            pin: req.body.pin,
+            state: req.body.state,
+          },
+        ],
         PhoneNo: req.body.phone,
         Password: hashPassword,
       });
