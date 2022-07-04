@@ -5,7 +5,6 @@ import BillingAddress from "../Components/BillingAddress";
 import "../CSS/confirmation.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-
 export default function ConfirmationPage() {
   window.scrollTo(0, 0);
   const [productDetails, setProductDetails] = useState([]);
@@ -13,7 +12,10 @@ export default function ConfirmationPage() {
   const [total, setTotal] = useState(0);
   const location = useLocation();
   const toPrint = useRef();
+  const [method, setMethod] = useState("");
   useEffect(() => {
+    const search = new URLSearchParams(location.search);
+    setMethod(search.get("method"));
     const pathname = location.pathname;
     const id = pathname.split("/")[1];
     const quantity = pathname.split("/")[2];
@@ -105,7 +107,9 @@ export default function ConfirmationPage() {
             <BillingAddress />
             <div className="payment">
               <div className="payment-method fw-bold">Payment Method</div>
-              <div className="method text-muted">Online Payment</div>
+              <div className="method text-muted">
+                {method === "cod" ? "Cash on delivery" : "Online Payment"}
+              </div>
             </div>
           </div>
         </div>

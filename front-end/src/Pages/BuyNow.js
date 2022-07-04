@@ -13,6 +13,7 @@ export default function BuyNow() {
   const [subtotal, setSubtotal] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [paymentLink, setPaymentLink] = useState("#");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const total = [];
   const Navigate = useNavigate();
 
@@ -121,6 +122,9 @@ export default function BuyNow() {
 
   const location = useLocation();
   const handlePayment = async () => {
+    if (subtotal == 0) {
+      return alert("Please choose atlease one product");
+    }
     // Validate Address
     const allAddress = document.querySelector(".addresses").children;
     const isSelected = Object.values(allAddress).find((add) => {
@@ -130,9 +134,16 @@ export default function BuyNow() {
       alert("Please select your address");
       return;
     }
+    if (paymentMethod == "") {
+      return alert("Please select payment method");
+    }
 
     setSpinner(true);
     if (location.pathname == "/shop/cart/products/buyNow") {
+      console.log(paymentMethod);
+      if (paymentMethod == "cod") {
+        return Navigate("/cart/products/confirmationPage?method=cod");
+      }
       try {
         const response = await fetch(
           "http://localhost:3001/checkout-sessions",
@@ -159,6 +170,9 @@ export default function BuyNow() {
       const [, , id, quantity, ...rest] = JSON.stringify(
         location.pathname,
       ).split("/");
+      if (paymentMethod == "cod") {
+        return Navigate(`/${id}/${quantity}/confirmationPage?method=cod`);
+      }
       try {
         const response = await fetch(
           "http://localhost:3001/checkout-sessions",
@@ -291,6 +305,26 @@ export default function BuyNow() {
                 onClick={() => setModalShow(true)}>
                 Add New Delivery Address
               </button>
+            </div>
+          </div>
+          <div className="shadow p-2">
+            <div className="Myinput-group d-flex gap-1 align-items-center p-3">
+              <input
+                type="radio"
+                name="payment"
+                id="cod"
+                onChange={() => setPaymentMethod("cod")}
+              />
+              <label htmlFor="cod">Cash on delivery</label>
+            </div>
+            <div className="Myinput-group d-flex gap-1 align-items-center p-3">
+              <input
+                type="radio"
+                name="payment"
+                id="online"
+                onChange={() => setPaymentMethod("online")}
+              />
+              <label htmlFor="online">Add Debit Card/Credit Card</label>
             </div>
           </div>
           <div className="d-flex align-items-center p-4 mb-5">
