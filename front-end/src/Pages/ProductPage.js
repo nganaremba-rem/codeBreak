@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import AddToCartFront from "../Components/AddToCartFront";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { Toast } from "react-bootstrap";
 
 export default function ProductPage() {
   const [quantityValue, setQuantityValue] = useState(1);
+  const [showToast, setShowToast] = useState(false);
+  const Navigate = useNavigate();
 
   const [myProduct, setMyProduct] = useState({});
   const id = useParams();
@@ -28,9 +31,49 @@ export default function ProductPage() {
   const handleQuantity = (e) => {
     setQuantityValue(e.target.value);
   };
+
+  const AddToCart = async () => {
+    const myMail = localStorage.getItem("User");
+    if (!myMail) {
+      Navigate("/login?msg=Please login first");
+    }
+    const data = await fetch("http://localhost:3001/addToCart", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id.id,
+        email: myMail,
+        quantity: quantityValue,
+      }),
+    });
+    if (data.ok) {
+      setShowToast(true);
+    }
+  };
   return (
     <>
       <Navbar />
+      {/* TOAST */}
+      <Toast
+        show={showToast}
+        onClose={() => setShowToast(false)}
+        delay={2000}
+        autohide
+        style={{
+          position: "fixed",
+          top: "0%",
+          right: "0",
+          zIndex: 1000,
+        }}>
+        <Toast.Header
+          style={{ padding: "1rem 2rem" }}
+          className="bg-info text-white">
+          <h4 className="me-auto">Added to cart</h4>
+        </Toast.Header>
+      </Toast>
+      {/*  */}
       <div className="main-wrapper mt-3 d-flex p-3 mb-4 justify-content-center gap-5">
         <div
           className="productNormalImage"
@@ -76,7 +119,7 @@ export default function ProductPage() {
           </div>
           <div className="d-flex flex-column gap-2 m-3">
             <button
-              onClick={AddToCartFront(id, quantityValue)}
+              onClick={AddToCart}
               className="addToCart form-control btn btn-dark text-white p-3 fw-bold rounded-pill"
               style={{ verticalAlign: "middle" }}>
               Add to Cart

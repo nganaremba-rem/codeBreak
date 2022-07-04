@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
+import "../CSS/addScroll.css";
+import logo from "../images/logo.png";
 // import { NavHashLink } from "react-router-hash-link";
 
 export default function Navbar() {
   const Navigate = useNavigate();
 
   const [myDetail, setMyDetail] = useState("");
+  const [searchProducts, setSearchProducts] = useState([]);
+  const [showSearchArea, setShowSearchArea] = useState(false);
   const mail = {
     user: localStorage.getItem("User"),
   };
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".searchDisplay") && showSearchArea) {
+      setShowSearchArea(false);
+    }
+    return;
+  });
 
   async function getUser() {
     if (mail.user) {
@@ -65,6 +76,28 @@ export default function Navbar() {
     Navigate("/login");
   };
 
+  //  Search
+  const handleSearch = async (e) => {
+    const searchTerm = e.target.value;
+    if (searchTerm.trim() == "") {
+      setShowSearchArea(false);
+      return setSearchProducts([]);
+    }
+    console.log("ok");
+    const res = await fetch("http://localhost:3001/fetchSearch", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        searchTerm,
+      }),
+    });
+    const resJson = await res.json();
+    setSearchProducts(resJson);
+    setShowSearchArea(true);
+  };
+
   return (
     <nav style={{ zIndex: "100" }}>
       <div className="brandWrapper">
@@ -75,21 +108,86 @@ export default function Navbar() {
             { display: "flex", alignItems: "center", textDecoration: "none" })
           }>
           <div className="brandLogo">
-            <img src="https://picsum.photos/250" alt="logo" />
-          </div>
-          <div className="brandName">
-            <span style={{ color: "red" }}>code</span>
-            <span style={{ color: "blueviolet" }}>Break</span>
+            <img src={logo} alt="logo" />
           </div>
         </Link>
-        <div className="searchWrapper">
+        <div
+          className="searchWrapper position-relative"
+          style={{
+            transition: "all 0.7s ease",
+          }}>
           <div className="searchIcon">
             <FontAwesomeIcon
               icon="search"
               style={{ transform: "translateY(1.3px)" }}
             />
           </div>
-          <input type="search" className="search" placeholder="Search" />
+          <input
+            onKeyUp={handleSearch}
+            type="search"
+            className="search"
+            placeholder="Search"
+            id="search-input"
+          />
+          {showSearchArea && (
+            <div
+              className="searchDisplay position-absolute"
+              style={{
+                top: "calc(100% + .3rem)",
+                left: "0",
+                zIndex: 1000,
+                minWidth: "30rem",
+                maxWidth: "40rem",
+                overflowX: "hidden",
+                maxHeight: "30rem",
+                overflowY: "auto",
+                borderRadius: "2rem",
+                transition: "all 0.7s ease",
+              }}>
+              {searchProducts.length == 0 ? (
+                <h3 className="text-white p-4 align-self-center">Not Found</h3>
+              ) : (
+                searchProducts.map((product) => {
+                  return (
+                    <Link
+                      to={"/shop/" + product.id}
+                      style={{ textDecoration: "none" }}
+                      key={product.id}>
+                      <div
+                        className="search-item d-grid align-items-center"
+                        style={{
+                          gridTemplateColumns: "1fr 5fr",
+                        }}>
+                        <div
+                          className="product-img"
+                          style={{
+                            width: "7rem",
+                            height: "7rem",
+                            overflow: "hidden",
+                          }}>
+                          <img
+                            src={product.imageLink}
+                            alt="image"
+                            style={{
+                              width: "100%",
+                              objectFit: "cover",
+                              objectPosition: "center",
+                              display: "block",
+                              marginTop: "1.3rem",
+                            }}
+                          />
+                        </div>
+                        <div className="product-name fw-bold text-white">
+                          {product.name}
+                        </div>
+                      </div>
+                      <hr className="text-white" />
+                    </Link>
+                  );
+                })
+              )}
+            </div>
+          )}
         </div>
       </div>
       <div className="navList">
@@ -113,17 +211,18 @@ export default function Navbar() {
         {localStorage.getItem("User") || user !== "" ? (
           <div
             data-dropdown
-            className=" navItem btn user d-flex flex-column align-items-center position-relative"
+            className=" navItem  btn user d-flex flex-column align-items-center position-relative"
             onClick={DropDown}>
-            <div className="profileWrapper" style={LinkStyle}>
+            <div className="profileWrapper text-white" style={LinkStyle}>
               <i className="fa-solid fa-user mb-2"></i>
               <div
-                className="username"
+                className="username text-white"
                 style={{
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   width: "5rem",
                   whiteSpace: "nowrap",
+                  color: "white",
                 }}>
                 Profile
               </div>

@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../Components/Navbar";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import AddressModal from "../Components/AddresssModal";
 
 export default function BuyNow() {
   const params = useParams();
+  const refPayment = useRef();
   const [myProducts, setMyProducts] = useState([]);
   const [allProduct, setAllProduct] = useState([]);
   const [myDetail, setMyDetail] = useState({});
-  // const [renderDetail, setRenderDetail] = useState(<></>);
+  const [spinner, setSpinner] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
   const [modalShow, setModalShow] = useState(false);
+  const [paymentLink, setPaymentLink] = useState("#");
   const total = [];
+  const Navigate = useNavigate();
+
+  if (!localStorage.getItem("User")) {
+    Navigate("/login?msg=Please login first");
+  }
 
   const getProducts = async () => {
     // When it gets many id i.e the cart
@@ -52,18 +59,6 @@ export default function BuyNow() {
   useEffect(() => {
     getProducts();
     getUserData();
-    const debit = document.querySelector("#debit");
-    const upi = document.querySelector("#upi");
-    const cod = document.querySelector("#cod");
-    const payNow = document.querySelector("#payNow");
-
-    payNow.addEventListener("click", (e) => {
-      if (debit.checked || upi.checked || cod.checked) {
-        return;
-      }
-      alert("Please select at least one payment method");
-      e.preventDefault();
-    });
   }, []);
 
   useEffect(() => {
@@ -78,7 +73,7 @@ export default function BuyNow() {
             <td>Rs. {product.price}</td>
             <td>{product.quantity || params.quantity}</td>
             <td>{product.id}</td>
-            <td>
+            <td className="text-success fw-bold">
               Rs. {product.price * (product?.quantity || params?.quantity)}
             </td>
           </tr>
@@ -99,8 +94,10 @@ export default function BuyNow() {
     const parent = e.target.closest(".address-component");
     const allAddress = document.querySelectorAll(".address-component");
     allAddress.forEach((add) => {
-      add.classList.remove("bg-success");
-      add.removeAttribute("id");
+      if (add != parent) {
+        add.classList.remove("bg-success");
+        add.removeAttribute("id");
+      }
     });
     parent.classList.add("bg-success");
     parent.setAttribute("id", "active");
@@ -122,54 +119,131 @@ export default function BuyNow() {
     }
   };
 
+  const location = useLocation();
+  const handlePayment = async () => {
+    // Validate Address
+    const allAddress = document.querySelector(".addresses").children;
+    const isSelected = Object.values(allAddress).find((add) => {
+      return add.getAttribute("id") == "active";
+    });
+    if (!isSelected) {
+      alert("Please select your address");
+      return;
+    }
+
+    setSpinner(true);
+    if (location.pathname == "/shop/cart/products/buyNow") {
+      try {
+        const response = await fetch(
+          "http://localhost:3001/checkout-sessions",
+          {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: localStorage.getItem("User"),
+            }),
+          },
+        );
+        const responseJson = await response.json();
+        console.log(responseJson);
+        setPaymentLink(responseJson.url);
+
+        window.location.href = responseJson.url.url;
+      } catch (e) {
+        console.log(e.message);
+      }
+      setSpinner(false);
+    } else {
+      const [, , id, quantity, ...rest] = JSON.stringify(
+        location.pathname,
+      ).split("/");
+      try {
+        const response = await fetch(
+          "http://localhost:3001/checkout-sessions",
+          {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: localStorage.getItem("User"),
+              id,
+              quantity,
+            }),
+          },
+        );
+        const responseJson = await response.json();
+        console.log(responseJson);
+        window.location.href = responseJson.url.url;
+      } catch (e) {
+        console.log(e.message);
+      }
+      setSpinner(false);
+    }
+  };
+
   return (
     <>
       <Navbar></Navbar>
+      {/* Address MODAL */}
       <AddressModal
         show={modalShow}
         onHide={() => setModalShow(false)}
         handleResponse={modalProp}
         handleDetail={detailProp}
       />
-      <div className="main-wrapper mt-3 mb-4 d-flex justify-content-center ">
-        <div className="orders shadow rounded-3 p-4 w-100">
+
+      <div
+        className="main-wrapper mt-3  d-flex flex-column justify-content-center"
+        s>
+        <div className="orders shadow rounded-3 w-100">
           <h4
             className="bg-info p-4 text-white"
-            style={{ borderRadius: "3rem" }}>
+            style={{ borderRadius: "0 0 1rem 1rem" }}>
             Summary
           </h4>
-          <table className="table mt-4 ">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Order ID</th>
-                <th>Amount</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {myProducts}
-
-              <tr>
-                <td colSpan={100}>
-                  <h4>
-                    <span className="text-muted">Subtotal:</span>
-                    <span className="text-danger"> Rs. {subtotal}</span>
-                  </h4>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="delivery-address mt-5">
+          <div className=" p-4">
+            <table className="table mt-4">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Product ID</th>
+                  <th>Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {myProducts}
+                <tr>
+                  <td colSpan={100} className="p-4">
+                    <h4>
+                      <span className="text-muted">Subtotal:</span>
+                      <span
+                        className="bg-danger text-white p-1"
+                        style={{ borderRadius: "2rem 1rem" }}>
+                        {" "}
+                        Rs. {subtotal}
+                      </span>
+                    </h4>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="shadow mt-5 rounded-3 mb-lg-5 w-100">
+          <div className="delivery-address">
             <h4
               className="bg-warning p-4 text-dark"
-              style={{ borderRadius: "3rem" }}>
+              style={{ borderRadius: "0 0 1rem 1rem" }}>
               Delivery Address
             </h4>
             <div
-              className="delivery-body-wrapper"
+              className="delivery-body-wrapper p-4"
               style={{ marginLeft: "3rem" }}>
               <div
                 className="addresses d-flex gap-2"
@@ -212,48 +286,33 @@ export default function BuyNow() {
                     })}
               </div>
               <button
-                className="btn btn-secondary mt-5"
+                className="btn mt-3"
+                style={{ backgroundColor: "#333", color: "white" }}
                 onClick={() => setModalShow(true)}>
                 Add New Delivery Address
               </button>
             </div>
           </div>
-          <h4
-            className="mt-5 bg-success p-4 text-white"
-            style={{ borderRadius: "3rem" }}>
-            Payment
-          </h4>
-          <div
-            className="payments d-flex flex-column gap-3"
-            style={{ marginLeft: "3rem" }}>
-            <div className="payment-method  d-flex gap-3 align-items-center">
-              <input type="radio" name="payment" id="debit" value={"debit"} />
-              <label htmlFor="debit">Add Debit/Credit/ATM Card</label>
-            </div>
-            <div className="payment-method  d-flex gap-3 align-items-center">
-              <input type="radio" name="payment" id="upi" value={"upi"} />
-              <label htmlFor="upi">UPI</label>
-              <input
-                className="form-control w-25"
-                type="text"
-                name="upi"
-                id="upi"
-                placeholder="Enter UPI ID"
-              />
-            </div>
-            <div className="payment-method d-flex gap-3 align-items-center">
-              <input type="radio" name="payment" id="cod" value={"cod"} />
-              <label htmlFor="cod">Cash on Delivery</label>
-            </div>
-          </div>
-          <Link to={"./confirmationPage"}>
+          <div className="d-flex align-items-center p-4 mb-5">
             <button
-              className="btn btn-danger w-25 p-3 mt-4"
-              style={{ marginLeft: "3rem" }}
+              onClick={handlePayment}
+              className="btn btn-danger w-25 p-3 mt-4 d-flex justify-content-between"
+              style={{ marginInline: "3rem" }}
               id="payNow">
-              Pay Now
+              <span>Pay Now </span>
+              <span className="fw-bold" style={{ fontSize: "1.2rem" }}>
+                {" "}
+                Rs. {subtotal}
+              </span>
             </button>
-          </Link>
+            {spinner && (
+              <span className="spinner spinner-border text-primary mt-4  p-2"></span>
+            )}
+          </div>
+          <a
+            ref={refPayment}
+            href={paymentLink}
+            style={{ display: "none" }}></a>
         </div>
       </div>
     </>

@@ -29,9 +29,6 @@ function App() {
               <Route index element={<ProductPage />}></Route>
               <Route path=":quantity/buyNow">
                 <Route index element={<BuyNow />}></Route>
-                <Route
-                  path="confirmationPage"
-                  element={<ConfirmationPage />}></Route>
               </Route>
             </Route>
           </Route>
@@ -39,6 +36,9 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="*" element={<NoPage />} />
+          <Route
+            path=":id/:quantity/confirmationPage"
+            element={<ConfirmationPage />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

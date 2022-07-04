@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap');
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -41,13 +44,22 @@ button:hover {
 }
 
 .backgroundImage {
-    background-image: url("https://source.unsplash.com/IHL-Jbawvvo");
+    background-image: url("./images/bg10.jpg");
     width: 100%;
     height: 100%;
     background-repeat: no-repeat;
     background-size: cover;
-    min-height: 90vh;
-    max-height: 90vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    transition: all 1s ease;
+}
+
+#search-input{
+    width: 13rem;
+    transition: all 0.3s ease-out;
+}
+#search-input:focus {
+    width: 27rem;
 }
 
 .linkCompo{
@@ -57,12 +69,10 @@ button:hover {
 .linkCompo:hover{
     color: black;
 }
-
 .backdrop {
-    backdrop-filter: blur(10px);
-    backdrop-filter: brightness(30%);
-    min-height: 90vh;
-    max-height: 90vh;
+    backdrop-filter:blur(2px) brightness(30%);
+    min-width: 100vw;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -72,9 +82,7 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 1rem;
-    background: transparent;
-    // color: #584a8e;
-    // mix-blend-mode: difference;
+    background: #fff;
     box-shadow: 0 4px 10px 0 rgba($color: #000000, $alpha: 0.2);
 }
 
@@ -83,15 +91,15 @@ nav {
     align-items: center;
 }
 .brandLogo{
-    height: 50px;
-    width: 50px;
+    height: 4rem;
+    width: 14rem;
+    border-radius: 1000vmax;
     overflow: hidden;
-    border-radius: 50%;
-    box-shadow: 0 4px 10px 0px rgba($color: #000000, $alpha: 0.2);
 }
 .brandLogo img{
     width: 100%;
     object-fit: cover;
+    object-position: bottom;
 }
 
 .searchWrapper {
@@ -130,14 +138,18 @@ li {
     padding: 0.5rem 1rem;
     cursor: pointer;
     border-radius: 0.2rem;
-    color: white;
 }
 
 .navItem:hover {
-    mix-blend-mode: normal; 
     background: red;
 }
-
+.image-wrapper{
+    transition: all 0.3s ease-in-out;
+    margin-inline: 2rem;
+}
+.image-wrapper:hover{
+    margin-top: -1rem;
+}
 .cart {
     padding: 0.5rem 1rem;
     background-color: rgb(32, 170, 129);
@@ -167,6 +179,9 @@ li {
 }
 
 .tagline {
+    font-family: 'Alegreya', serif;
+    letter-spacing: 2px;
+    font-size: 3.5rem;
     color: white;
     padding: 2rem;
 }

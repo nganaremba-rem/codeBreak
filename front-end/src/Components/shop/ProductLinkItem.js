@@ -1,24 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function productItem({ item }) {
+export default function ProductItem({ handleToast, item }) {
+  const Navigate = useNavigate();
+
   const addToCart = async (e) => {
     e.preventDefault();
     const myMail = localStorage.getItem("User");
-    console.log(item.id, myMail);
-    const data = await fetch("http://localhost:3001/addToCart", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: item.id,
-        email: myMail,
-        quantity: 1,
-      }),
-    });
-    if (data.ok) {
-      alert("Added");
+    if (!myMail) Navigate("/login?msg=Please login first");
+    try {
+      const data = await fetch("http://localhost:3001/addToCart", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: item.id,
+          email: myMail,
+          quantity: 1,
+        }),
+      });
+      if (data.ok) {
+        handleToast(true);
+      }
+    } catch (e) {
+      console.log(e.message);
     }
   };
 

@@ -1,17 +1,32 @@
 import React from "react";
+import roundedLogo from "../images/roundedLogo.png";
 
 export default function Footer() {
   return (
     <footer>
       <div className="footer">
         <div className="firstFooterItem">
-          <img
-            src="https://picsum.photos/50"
-            alt=""
-            style={{ borderRadius: "50%" }}
-          />
+          <div
+            className="footer-img-wrapper"
+            style={{
+              borderRadius: "50%",
+              width: "60px",
+              height: "60px",
+              overflow: "hidden",
+            }}>
+            <img
+              src={roundedLogo}
+              alt=""
+              style={{
+                height: "100%",
+                aspectRatio: 16 / 9,
+                objectFit: "cover",
+                objectPosition: "center",
+              }}
+            />
+          </div>
           <div className="copyright">
-            Copyright &copy; 2022 codeBreak. All Rights Reserved
+            Copyright &copy; 2022 Lei B-U. All Rights Reserved
           </div>
         </div>
         <div className="footerCategories">

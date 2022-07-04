@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "../CSS/login.css";
 import svg from "../images/form.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 // import ShowModal from "../Components/ShowModal";
 
 export default function Login() {
@@ -10,10 +10,15 @@ export default function Login() {
   const [user, setUser] = useState("");
   const Navigate = useNavigate();
   const [spinner, setSpinner] = useState(false);
+  const search = useLocation().search;
+  const searchParams = new URLSearchParams(search);
 
   useEffect(() => {
     if (localStorage.getItem("User")) {
       Navigate("/");
+    }
+    if (searchParams.get("msg")) {
+      setMsg(searchParams.get("msg"));
     }
   }, []);
 
@@ -70,7 +75,7 @@ export default function Login() {
             <h1 className="heading">Login</h1>
             <div className="signup-with">
               <div className="line"></div>
-              Login with codeBreak
+              Login with Lei B-U
             </div>
 
             <form className="form-group" onSubmit={loginData}>

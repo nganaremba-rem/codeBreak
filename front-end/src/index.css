@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:wght@900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap");
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -41,13 +44,25 @@ button:hover {
 }
 
 .backgroundImage {
-  background-image: url("https://source.unsplash.com/IHL-Jbawvvo");
+  background-image: url("./images/bg10.jpg");
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 90vh;
-  max-height: 90vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+#search-input {
+  width: 13rem;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+
+#search-input:focus {
+  width: 27rem;
 }
 
 .linkCompo {
@@ -60,12 +75,10 @@ button:hover {
 }
 
 .backdrop {
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: brightness(30%);
-          backdrop-filter: brightness(30%);
-  min-height: 90vh;
-  max-height: 90vh;
+  -webkit-backdrop-filter: blur(2px) brightness(30%);
+          backdrop-filter: blur(2px) brightness(30%);
+  min-width: 100vw;
+  min-height: 100vh;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -86,7 +99,7 @@ nav {
       -ms-flex-pack: justify;
           justify-content: space-between;
   padding: 0.5rem 1rem;
-  background: transparent;
+  background: #fff;
   -webkit-box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
           box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
 }
@@ -101,18 +114,18 @@ nav {
 }
 
 .brandLogo {
-  height: 50px;
-  width: 50px;
+  height: 4rem;
+  width: 14rem;
+  border-radius: 1000vmax;
   overflow: hidden;
-  border-radius: 50%;
-  -webkit-box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
 .brandLogo img {
   width: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+  -o-object-position: bottom;
+     object-position: bottom;
 }
 
 .searchWrapper {
@@ -160,12 +173,20 @@ li {
   padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: 0.2rem;
-  color: white;
 }
 
 .navItem:hover {
-  mix-blend-mode: normal;
   background: red;
+}
+
+.image-wrapper {
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  margin-inline: 2rem;
+}
+
+.image-wrapper:hover {
+  margin-top: -1rem;
 }
 
 .cart {
@@ -212,6 +233,9 @@ li {
 }
 
 .tagline {
+  font-family: 'Alegreya', serif;
+  letter-spacing: 2px;
+  font-size: 3.5rem;
   color: white;
   padding: 2rem;
 }

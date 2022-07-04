@@ -9,7 +9,7 @@ export default function Cart() {
 
   // If not login
   if (localStorage.getItem("User") == null) {
-    Navigate("/login");
+    Navigate("/login?msg=Please login first");
   }
   const [myCarts, setMyCarts] = useState([]);
   const [myData, setMyData] = useState({});

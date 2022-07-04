@@ -5,14 +5,18 @@ import bgImage from "../images/form2.svg";
 import Button from "react-bootstrap/Button";
 import MyVerticallyCenteredModal from "../Components/Modal";
 import { Link, useNavigate } from "react-router-dom";
-
+import OtpModal from "../Components/OtpModal";
 export default function Signup() {
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
   const [spinner, setSpinner] = useState(false);
+  const [otpModal, setOtpModal] = useState(false);
+  // const [otpVerification, setOtpVerification] = useState(false);
   const pass = useRef();
   const cpass = useRef();
+  const email = useRef();
+  const form = useRef();
 
   useEffect(() => {
     if (localStorage.getItem("User")) {
@@ -32,19 +36,38 @@ export default function Signup() {
     }
   };
 
+  const sendOtp = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/sendOtp", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.current.value,
+        }),
+      });
+      if (res.ok) {
+        setSpinner(false);
+        return setOtpModal(true);
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
   const submitForm = (e) => {
     e.preventDefault();
+    setSpinner(true);
     if (!passValidate()) {
       return;
     }
-    const form = e.target;
-    const formData = new FormData(form);
-    // FETCH API
-    submitData(formData);
+    console.log(email.current.value);
+    sendOtp();
+    return;
   };
 
   const submitData = async (formData) => {
-    setSpinner(true);
     const response = await fetch("http://localhost:3001/signup", {
       method: "POST",
       headers: {
@@ -54,9 +77,9 @@ export default function Signup() {
     });
     const res = await response.json();
 
-    setSpinner(false);
     if (response.status === 201) {
       setModalShow(true);
+      form.current.reset();
     } else if (res.msg != "") {
       setMsg(res.msg);
     }
@@ -80,6 +103,9 @@ export default function Signup() {
 
   // Email Validation
   const emailValidate = (e) => {
+    if (e.target.value == "") {
+      return setMsg("");
+    }
     fetch("http://localhost:3001/validateEmail", {
       method: "POST",
       headers: {
@@ -98,6 +124,22 @@ export default function Signup() {
     });
   };
 
+  // useEffect(() => {
+  //   console.log("ok");
+  //   if (otpVerification) {
+
+  //   }
+  // }, [otpVerification]);
+
+  const otpVerification = (data) => {
+    if (data) {
+      const formElement = form.current;
+      const formData = new FormData(formElement);
+      // FETCH API
+      submitData(formData);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -106,15 +148,20 @@ export default function Signup() {
         show={modalShow}
         onHide={() => setModalShow(false)}
       />
+      <OtpModal
+        handleOtpShow={otpVerification}
+        show={otpModal}
+        onHide={() => setOtpModal(false)}
+      />
       <div className="main-container">
         <div className="content">
           <div className="outlet">
             <h1 className="heading">Sign Up</h1>
             <div className="signup-with">
               <div className="line"></div>
-              Sign up with codeBreak
+              Sign up with Lei B-U
             </div>
-            <form className="form-group" onSubmit={submitForm}>
+            <form ref={form} className="form-group" onSubmit={submitForm}>
               {msg !== "" ? <div className="msg-area">{msg}</div> : ""}
               <div className="input-group">
                 <label htmlFor="name">Name</label>
@@ -129,6 +176,7 @@ export default function Signup() {
               <div className="input-group">
                 <label htmlFor="email">Email</label>
                 <input
+                  ref={email}
                   required
                   onBlur={emailValidate}
                   type="email"

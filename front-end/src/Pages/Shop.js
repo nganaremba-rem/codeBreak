@@ -3,12 +3,14 @@ import Navbar from "../Components/Navbar";
 import "../CSS/shop.css";
 import Footer from "../Components/Footer";
 import ProductLinkItem from "../Components/shop/ProductLinkItem";
+import { Toast } from "react-bootstrap";
 
 export default function Shop() {
   const [myData, setMyData] = useState([]);
   const [currentData, setCurrentData] = useState([]);
   const [mainData, setMainData] = useState([]);
   const [spinner, setSpinner] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   // GET PRODUCTS
 
   const getData = async () => {
@@ -33,16 +35,12 @@ export default function Shop() {
       const sorted = currentData.sort((a, b) => b.price - a.price);
       setCurrentData(() => sorted);
       renderMe();
-
-      console.log(sorted);
     };
 
     const sortL2H = () => {
       const sorted = currentData.sort((a, b) => a.price - b.price);
       setCurrentData(() => sorted);
       renderMe();
-
-      console.log(currentData);
     };
 
     if (value === "priceH2L") {
@@ -73,7 +71,6 @@ export default function Shop() {
       e.target.classList.add("active-category");
     };
     toggle();
-    console.log(e);
     document.querySelector("#sort").value = "";
 
     const id = e.target.id;
@@ -84,10 +81,17 @@ export default function Shop() {
   const normalSort = () => {
     renderMe();
   };
+
+  const toastInfo = (data) => {
+    setShowToast(data);
+  };
+
   const renderMe = () => {
     window.scrollTo(0, 0);
     setMyData(() =>
-      currentData.map((item) => <ProductLinkItem item={item} key={item.id} />),
+      currentData.map((item) => (
+        <ProductLinkItem handleToast={toastInfo} item={item} key={item.id} />
+      )),
     );
   };
 
@@ -97,7 +101,6 @@ export default function Shop() {
   }, []);
 
   useEffect(() => {
-    console.log("Data changed");
     renderMe();
   }, [currentData]);
 
@@ -105,6 +108,25 @@ export default function Shop() {
     <>
       <Navbar />
       <div className="shop mb-lg-5">
+        {/* TOAST */}
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={2000}
+          autohide
+          style={{
+            position: "fixed",
+            top: "0%",
+            right: "0",
+            zIndex: 1000,
+          }}>
+          <Toast.Header
+            style={{ padding: "1rem 2rem" }}
+            className="bg-info text-white">
+            <h4 className="me-auto">Added to cart</h4>
+          </Toast.Header>
+        </Toast>
+        {/*  */}
         <section className="sidebar">
           <h3>Categories</h3>
           <ul onClick={(e) => filterHandle(e)}>
@@ -151,7 +173,7 @@ export default function Shop() {
                 className=" spinner-border text-danger"
                 role={"status"}
                 style={{ fontSize: "20rem" }}>
-                <span class="sr-only">Loading...</span>
+                <span className="sr-only">Loading...</span>
               </span>
             ) : (
               myData

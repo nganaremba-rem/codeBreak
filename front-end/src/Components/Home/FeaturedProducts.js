@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ImageCard from "./ImageCard";
 import { Link } from "react-router-dom";
+import uuid from "react-uuid";
 
 export default function FeaturedProducts() {
   //
@@ -10,14 +11,16 @@ export default function FeaturedProducts() {
       const prodsPromise = await fetch("http://localhost:3001/getProducts");
       const prodsJson = await prodsPromise.json();
       const randomNumbers = [];
-      for (let i = 0; i < 20; i++)
-        randomNumbers.push(
-          Math.floor(Math.random() * Object.keys(prodsJson).length),
-        );
+      for (let i = 0; i < 20; i++) {
+        let random = Math.floor(Math.random() * Object.keys(prodsJson).length);
+        while (randomNumbers.find((num) => num == random))
+          random = Math.floor(Math.random() * Object.keys(prodsJson).length);
+        randomNumbers.push(random);
+      }
       const prodArrObj = randomNumbers.map((rand) => prodsJson[rand]);
       const myImg = prodArrObj.map((obj) => {
         return (
-          <Link className="linkCompo" to={`/shop/${obj.id}`}>
+          <Link key={uuid()} className="linkCompo" to={`/shop/${obj.id}`}>
             {" "}
             <ImageCard key={obj.id} props={obj} />
           </Link>
